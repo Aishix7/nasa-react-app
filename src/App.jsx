@@ -20,14 +20,8 @@ function App() {
 
       const today = new Date().toDateString();
       const localKey = `NASA-${today}`;
-      if (localStorage.getItem(localKey)) {
-        const apiData = JSON.parse(localStorage.getItem(localKey));
-        setData(apiData);
-        console.log("Fetched from cache today");
-        return;
-      }
-      localStorage.clear();
 
+      // Moved the fetch API logic here
       try {
         const res = await fetch(url);
         const apiData = await res.json();
@@ -37,6 +31,14 @@ function App() {
       } catch (err) {
         console.log(err.message);
       }
+
+      if (localStorage.getItem(localKey)) {
+        const apiData = JSON.parse(localStorage.getItem(localKey));
+        setData(apiData);
+        console.log("Fetched from cache today");
+        return;
+      }
+      localStorage.clear();
     }
     fetchAPIData();
   }, []);
