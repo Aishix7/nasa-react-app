@@ -11,6 +11,7 @@ function App() {
   function handleToggleModal() {
     setShowModal(!showModal);
   }
+
   useEffect(() => {
     async function fetchAPIData() {
       const NASA_KEY = import.meta.env.VITE_NASA_API_KEY;
@@ -32,7 +33,6 @@ function App() {
         const apiData = await res.json();
         localStorage.setItem(localKey, JSON.stringify(apiData));
         setData(apiData);
-
         console.log("Fetched from API today");
       } catch (err) {
         console.log(err.message);
@@ -40,6 +40,7 @@ function App() {
     }
     fetchAPIData();
   }, []);
+
   return (
     <>
       {data ? (
