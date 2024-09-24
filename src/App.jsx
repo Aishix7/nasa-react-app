@@ -15,13 +15,20 @@ function App() {
   useEffect(() => {
     async function fetchAPIData() {
       const NASA_KEY = import.meta.env.VITE_NASA_API_KEY;
-      const url =
-        "https://api.nasa.gov/planetary/apod" + `?api_key=${NASA_KEY}`;
+      const url = `https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}`;
 
       const today = new Date().toDateString();
       const localKey = `NASA-${today}`;
 
-      // Moved the fetch API logic here
+      // Check localStorage first
+      if (localStorage.getItem(localKey)) {
+        const cachedData = JSON.parse(localStorage.getItem(localKey));
+        setData(cachedData);
+        console.log("Fetched from cache today");
+        return;
+      }
+
+      // If not in cache, fetch from API
       try {
         const res = await fetch(url);
         const apiData = await res.json();
@@ -31,15 +38,8 @@ function App() {
       } catch (err) {
         console.log(err.message);
       }
-
-      if (localStorage.getItem(localKey)) {
-        const apiData = JSON.parse(localStorage.getItem(localKey));
-        setData(apiData);
-        console.log("Fetched from cache today");
-        return;
-      }
-      localStorage.clear();
     }
+
     fetchAPIData();
   }, []);
 
